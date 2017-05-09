@@ -1,0 +1,142 @@
+pzl_resource_user
+	userid 自增id
+	p_userid //用户id
+	p_username //用户名称
+	p_avatar //用户头像
+	p_intro //简介
+	source //来源 baidu weipan
+	p_share_count //资源总数
+	p_fans_count //粉丝数
+	p_follow_count //关注数
+	p_hits //浏览次数
+	adddate  //创建时间 日期
+	cjindex //采集索引表id
+	status //审核状态 1 未审核  2 已删除 3 审核通过
+
+CREATE TABLE `pzl_resource_user` (
+	`userid` bigint(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+	`p_userid` bigint(11) unsigned DEFAULT '0' COMMENT '用户id',
+	`p_username` char(50) NOT NULL DEFAULT '' COMMENT '用户名称',
+	`p_avatar` varchar(100) NOT NULL DEFAULT '' COMMENT '用户头像',
+	`p_intro` varchar(100) NOT NULL DEFAULT '' COMMENT '简介',
+	`p_share_count` int(10) NOT NULL DEFAULT '0' COMMENT '资源总数',
+	`p_fans_count` int(10) NOT NULL DEFAULT '0' COMMENT '粉丝数',
+	`p_follow_count` int(10) NOT NULL DEFAULT '0' COMMENT '关注数',
+	`p_hits` int(10) NOT NULL DEFAULT '0' COMMENT '浏览次数',
+	`source` char(10) NOT NULL DEFAULT '' COMMENT '来源 baidu weipan',
+	`cjindex` bigint(11) NOT NULL DEFAULT '0' COMMENT 'pzl_cj_index.indexid',
+	`adddate` datetime NOT NULL COMMENT '添加时间 日期',
+	`status` tinyint(2) unsigned DEFAULT '1' COMMENT '审核状态 1:未审核, 2:已删除, 3:审核通过',
+	PRIMARY KEY (`userid`),
+	KEY `idx_status_adddate` (`status`,`adddate`)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='资源用户表';
+
+
+pzl_resource_detail
+	detailid
+	p_title //标题
+	p_filetype //文件类型 mp3 pdf flv doc等
+	p_filesize //文件大小
+	p_userid //用户id
+	p_username //用户名称
+	p_shorturl //短hash url 例：http://pan.baidu.com/s/1cyYf0M
+	p_dynamicurl //动态url 例：http://pan.baidu.com/share/link?shareid=23781188&uk=422894618
+	p_source_id //分享id
+	p_fs_id //分享fid
+	p_fid //分享fid
+	p_album_id //附件id
+	p_down_num //下次次数
+	p_save_num //保存次数
+	p_sharetime //分享时间
+	catid //所属分类
+	hits //浏览次数
+	adddate  //创建时间 日期
+	cjindex //采集索引表id
+	source //来源 baidu weipan
+	status //审核状态 1:未审核, 2:已删除, 3:审核通过
+	userid //pzl_resource_user.userid
+	
+CREATE TABLE `pzl_resource_detail` (
+	`detailid` bigint(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+	`p_title` varchar(100) NOT NULL DEFAULT '' COMMENT '标题',
+	`p_filetype` char(10) NOT NULL DEFAULT '' COMMENT '文件类型 mp3 pdf flv doc等',
+	`p_filesize` varchar(20) NOT NULL DEFAULT '' COMMENT '文件大小',
+	`p_userid` bigint(11) unsigned DEFAULT '0' COMMENT '用户id',
+	`p_username` char(50) NOT NULL DEFAULT '' COMMENT '用户名称',
+	`p_shorturl` varchar(100) NOT NULL DEFAULT '' COMMENT '短hash url 例：http://pan.baidu.com/s/1cyYf0M',
+	`p_dynamicurl` varchar(100) NOT NULL DEFAULT '' COMMENT '动态url 例：http://pan.baidu.com/share/link?shareid=23781188&uk=422894618',
+	`p_source_id` bigint(11) unsigned DEFAULT '0' COMMENT '分享id',
+	`p_fs_id` bigint(11) unsigned DEFAULT '0' COMMENT '分享fs_id',
+	`p_fid` bigint(11) unsigned DEFAULT '0' COMMENT '分享fid',
+	`p_album_id` bigint(11) unsigned DEFAULT '0' COMMENT '附件id',
+	`p_down_num` int(10) unsigned DEFAULT '0' COMMENT '下次次数',
+	`p_save_num` int(10) unsigned DEFAULT '0' COMMENT '保存次数',
+	`p_sharetime` int(10) unsigned DEFAULT '0' COMMENT '分享时间',
+	`p_hits` int(10) NOT NULL DEFAULT '0' COMMENT '浏览次数',
+	`userid` bigint(11) unsigned DEFAULT '0' COMMENT 'pzl_resource_user.userid',
+	`catid` smallint(5) unsigned DEFAULT '0' COMMENT '所属分类',
+	`cjindex` bigint(11) NOT NULL DEFAULT '0' COMMENT 'pzl_cj_index.indexid',
+	`adddate` datetime NOT NULL COMMENT '添加时间 日期',
+	`status` tinyint(2) unsigned DEFAULT '1' COMMENT '审核状态 1:未审核, 2:已删除, 3:审核通过',
+	`source` char(10) NOT NULL DEFAULT '' COMMENT '来源 baidu weipan',
+	PRIMARY KEY (`detailid`),
+	KEY `idx_userid_status` (`userid`,`status`),
+	KEY `idx_catid_status` (`catid`,`status`)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='资源信息表';	
+	
+pzl_cj_index
+	indexid
+	url  //采集url
+	title_md5 //标题md5
+	resid  //资源id
+	domain  //采集网站 panduoduo:盘多多
+	status  //采集状态 0:未操作 1:http请求失败 2:采集内容不符合要求 3:采集成功
+	adddate  //创建时间 日期
+	type  //分类 user:用户 detail:详情
+	extend  //扩展字段
+	
+CREATE TABLE `pzl_cj_index` (
+  `indexid` bigint(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT '采集url',
+  `title_md5` varchar(32) NOT NULL DEFAULT '' COMMENT '标题md5',
+  `resid` varchar(50) NOT NULL DEFAULT '' COMMENT '资源id',
+  `status` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '采集状态 0:未操作 1:http请求失败 2:采集内容不符合要求 3:采集成功',
+  `type` char(20) NOT NULL COMMENT '分类 user:用户 detail:详情',
+  `adddate` datetime NOT NULL COMMENT '添加时间',
+  `domain` char(20) NOT NULL DEFAULT '' COMMENT '采集网站 panduoduo:盘多多',
+  `extend` varchar(100) DEFAULT NULL COMMENT '扩展字段',
+  PRIMARY KEY (`indexid`),
+  KEY `idx_url` (`url`),
+  KEY `idx_type_status` (`type`,`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='采集索引表';
+
+CREATE TABLE `pzl_config` (
+  `name` char(20) NOT NULL DEFAULT '' COMMENT '键名',
+  `value` varchar(50) NOT NULL DEFAULT '' COMMENT '键值',
+  PRIMARY KEY (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='配置表';
+
+
+CREATE TABLE `pzl_category` (
+  `catid` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `catname` varchar(50) NOT NULL COMMENT '分类名称',
+  `aliasname` varchar(50) NOT NULL COMMENT '别名',
+  `letter` char(5) NOT NULL COMMENT '首字母',
+  `thumb` varchar(100) NOT NULL DEFAULT '' COMMENT '缩略图',
+  `type` char(10) NOT NULL DEFAULT '' COMMENT '类型 文章article 资源resource tag词tag',
+  `parentid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父级id',
+  `seotitle` varchar(200) NOT NULL DEFAULT '' COMMENT 'seo标题',
+  `seokeyword` varchar(255) NOT NULL DEFAULT '' COMMENT 'seo关键词',
+  `seodescription` mediumtext NOT NULL COMMENT 'seo描述',
+  `adddate` datetime NOT NULL COMMENT '添加时间',
+  `editdate` datetime NOT NULL COMMENT '编辑时间',
+  `status` tinyint(2) unsigned DEFAULT '1' COMMENT '开启状态 1:未开启, 2:已删除, 3:已开启',
+  `order` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序 数值越小越靠前',
+  PRIMARY KEY (`catid`),
+  KEY `idx_catname` (`catname`),
+  KEY `idx_type_status` (`type`,`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='分类表';
+
+
+
+
