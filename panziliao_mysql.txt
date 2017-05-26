@@ -111,9 +111,9 @@ CREATE TABLE `pzl_cj_index` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='采集索引表';
 
 CREATE TABLE `pzl_config` (
-  `name` char(20) NOT NULL DEFAULT '' COMMENT '键名',
-  `value` varchar(50) NOT NULL DEFAULT '' COMMENT '键值',
-  PRIMARY KEY (`name`)
+  `skey` char(20) NOT NULL DEFAULT '' COMMENT '键名',
+  `sval` varchar(50) NOT NULL DEFAULT '' COMMENT '键值',
+  PRIMARY KEY (`skey`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='配置表';
 
 
